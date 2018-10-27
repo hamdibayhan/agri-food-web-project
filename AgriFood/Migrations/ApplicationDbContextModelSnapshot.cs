@@ -29,14 +29,22 @@ namespace AgriFood.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken();
 
+                    b.Property<string>("Description");
+
                     b.Property<string>("Email")
                         .HasMaxLength(256);
 
                     b.Property<bool>("EmailConfirmed");
 
+                    b.Property<string>("FarmName");
+
+                    b.Property<double>("Latitude");
+
                     b.Property<bool>("LockoutEnabled");
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
+
+                    b.Property<double>("Longitude");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256);
@@ -68,6 +76,62 @@ namespace AgriFood.Migrations
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("AgriFood.Models.Order", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address");
+
+                    b.Property<int>("Amount");
+
+                    b.Property<string>("CustomerId");
+
+                    b.Property<DateTime>("OrderDate");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<int>("ProductId");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("AgriFood.Models.Product", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Amount");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("FarmerId");
+
+                    b.Property<byte[]>("Image");
+
+                    b.Property<bool>("IsActive");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<string>("Title");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("FarmerId");
+
+                    b.ToTable("Products");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -182,6 +246,25 @@ namespace AgriFood.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("AgriFood.Models.Order", b =>
+                {
+                    b.HasOne("AgriFood.Models.ApplicationUser", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId");
+
+                    b.HasOne("AgriFood.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("AgriFood.Models.Product", b =>
+                {
+                    b.HasOne("AgriFood.Models.ApplicationUser", "Farmer")
+                        .WithMany()
+                        .HasForeignKey("FarmerId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -8,16 +8,17 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using AgriFood.Models;
 
 namespace AgriFood.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class LoginWith2faModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<LoginWith2faModel> _logger;
 
-        public LoginWith2faModel(SignInManager<IdentityUser> signInManager, ILogger<LoginWith2faModel> logger)
+        public LoginWith2faModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginWith2faModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
@@ -44,6 +45,7 @@ namespace AgriFood.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnGetAsync(bool rememberMe, string returnUrl = null)
         {
+            return NotFound();
             // Ensure the user has gone through the username & password screen first
             var user = await _signInManager.GetTwoFactorAuthenticationUserAsync();
 
@@ -60,6 +62,7 @@ namespace AgriFood.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(bool rememberMe, string returnUrl = null)
         {
+            return NotFound();
             if (!ModelState.IsValid)
             {
                 return Page();

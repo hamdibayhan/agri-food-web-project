@@ -1,0 +1,51 @@
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+@{
+    var UserId = @UserManager.GetUserId(User);
+}
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        </li>
+        @if (User.IsInRole("Farmer"))
+        {
+            <li class="nav-item ml-2">
+                <a class="btn btn-light" asp-controller="Products" asp-action="Create" asp-route-FarmerId=@UserId>Add Product</a>
+            </li>
+            <li class="nav-item ml-2">
+                <a class="btn btn-info" asp-controller="Farmer" asp-action="Details" asp-route-id=@UserId>My Farm</a>
+            </li>
+            <li class="nav-item ml-2">
+                <a class="btn btn-warning" asp-controller="Orders" asp-action="FarmerOrders" asp-route-FarmerId=@UserId>Incoming Orders</a>
+            </li>
+        }
+        @if (User.IsInRole("Farmer") || User.IsInRole("Customer"))
+        {
+            <li class="nav-item ml-2">
+                <a class="btn btn-warning" asp-controller="Orders" asp-action="CustomerOrders" asp-route-CustomerId=@UserId>My Orders</a>
+            </li>
+        }
+    </ul>
+    <form asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })" method="post" id="logoutForm">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item ml-2">
+                <button type="submit" class="btn btn-danger">Logout</button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    </ul>
+}

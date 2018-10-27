@@ -1,0 +1,9 @@
+@model IEnumerable<Order>
+
+@{
+    ViewData["Title"] = "My Orders";
+}
+
+<h2 class="text-center text-info mt-3">My Orders</h2>
+<hr />
+@await Html.PartialAsync("_OrderList", Model)

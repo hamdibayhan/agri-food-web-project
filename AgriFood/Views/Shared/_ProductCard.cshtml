@@ -1,0 +1,29 @@
+@model Product
+
+<div class="m-4">
+    <div class="product-card card">
+    @if (Model.Image != null && Model.Image.Length > 0)
+    {
+        string imageSource = $"data:image;base64,{Convert.ToBase64String(@Model.Image)}";
+        <img class="card-img-top" src="@imageSource" alt="Card image cap">
+    }
+    else
+    {
+      <img class="card-img-top" src="~/images/no_image.png" alt=@Model.Title>
+    }
+      <div class="card-body">
+        <h5 class="card-title text-center">@Model.Title</h5>
+      </div>
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item text-center">Price: $@Model.Price</li>
+        <li class="list-group-item text-center">
+            <a asp-controller="Farmer" asp-action="Details" asp-route-id="@Model.Farmer.Id" 
+            class="card-link">@Model.Farmer.FarmName</a>
+        </li>
+      </ul>
+      <div class="card-body">
+        <a asp-controller="Products" asp-action="Details" asp-route-id="@Model.ID" asp-route-FarmerId="@Model.FarmerId" 
+        class="btn btn-primary btn-block text-center">Details</a>
+      </div>
+    </div>
+</div>

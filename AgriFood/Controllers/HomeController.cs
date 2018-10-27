@@ -1,37 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using AgriFood.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using AgriFood.Constants;
 
 namespace AgriFood.Controllers
 {
     public class HomeController : Controller
     {
-        public IActionResult Index()
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        public HomeController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            return View();
+            _context = context;
+            _userManager = userManager;
         }
 
-        public IActionResult About()
+        public async Task<IActionResult> Index()
         {
-            ViewData["Message"] = "Your application description page.";
-
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
-
-        public IActionResult Privacy()
-        {
-            return View();
+            ViewBag.Farmers = await _userManager.GetUsersInRoleAsync(Roles.FarmerRole);
+            var Products = _context.Products
+                                   .Include(p => p.Farmer)
+                                   .Where(p => p.IsActive)
+                                   .OrderByDescending(p => p.CreatedDate)
+                                   .Take(9);
+                                            
+            return View(await Products.ToListAsync());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

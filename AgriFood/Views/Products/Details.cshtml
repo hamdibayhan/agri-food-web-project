@@ -1,0 +1,63 @@
+@model Product
+@inject SignInManager<ApplicationUser> SignInManager
+@{
+    ViewData["Title"] = "Product Details";
+}
+<div id="modal-placeholder"></div>
+<div id="product-id" data-product-id="@Model.ID" data-product-price="@Model.Price"></div>
+
+<h2 id="product-detail-title" class="text-center mt-2">Product Details</h2>
+<hr>
+<div class="d-flex justify-content-center m-5">
+    <div class="card border-warning mb-3" style="max-width: 50rem;">
+    <div class="card-header">@Model.Title</div>
+    <div class="card-body text-info">
+        <div class="row">
+            <div class="col-4">
+                @if (Model.Image != null && Model.Image.Length > 0)
+                {
+                    string imageSource = $"data:image;base64,{Convert.ToBase64String(Model.Image)}";
+                    <img class="card-img-top" src="@imageSource" alt="Card image cap">
+                }
+                else
+                {
+                <img class="card-img-top" src="~/images/no_image.png" alt=Model.Title>
+                }
+            </div>
+            <div class="col-8">            
+                <p class="card-text">
+                    <strong>Price: </strong> 
+                    $@Model.Price
+                </p>
+                <p class="card-text">
+                    <strong>The Rest Amount: </strong> 
+                    <div id="product-detail-amount">@Model.Amount</div> 
+                </p>
+                <p class="card-text">
+                    <strong>Description: </strong> 
+                    @Model.Description
+                </p>
+                <a asp-controller="Farmer" asp-action="Details" asp-route-id="@Model.Farmer.Id" class="btn btn-warning mr-2">Go To The Farm</a>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                    @if (ViewBag.IsProductOwn)
+                    {
+                        <a class="mr-2 btn btn-info" asp-action="Edit" asp-route-id="@Model.ID">Edit</a> 
+                        <a class="mr-2 btn btn-danger" asp-action="Delete" asp-route-id="@Model.ID">Delete</a>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-primary" data-toggle="order-modal" data-target="#add-order" data-url="/Orders/Create">
+                            Order Now
+                        </button>
+                    }
+                }
+                else
+                {
+                    <p class="text-danger"><strong>You must login for order this product.</strong></p> 
+                }
+            </div>
+        </div>
+    </div>
+    </div>
+</div>    

@@ -6,6 +6,31 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.1.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.1.0-preview1-final" />
+    <DotNetCliToolReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Tools" Version="2.1.0-preview1-final" />
+    <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Remove="Migrations\20181012205116_CreateIdentitySchema.cs" />
+    <Compile Remove="Areas\Identity\Data\AgriFoodIdentityDbContext.cs" />
+    <Compile Remove="Migrations\20181012205339_CreateIdentitySchema.Designer.cs" />
+    <Compile Remove="Migrations\20181012205339_CreateIdentitySchema.cs" />
+    <Compile Remove="Migrations\20181013120756_CreateProduct.cs" />
+    <Compile Remove="Areas\Identity\Data\ApplicationDbContext.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Remove="Views\Orders\Delete.cshtml" />
+    <Content Remove="Views\Orders\Create.cshtml" />
+    <Content Remove="Views\Orders\Details.cshtml" />
+    <Content Remove="wwwroot\lib\bootstrap\.bower.json" />
+    <Content Remove="wwwroot\lib\bootstrap\dist\css\bootstrap.css" />
+    <Content Remove="wwwroot\lib\jquery\.bower.json" />
+    <Content Remove="wwwroot\lib\jquery\dist\jquery.js" />
+    <Content Remove="wwwroot\lib\jquery\dist\jquery.min.js" />
+  </ItemGroup>
 </Project>

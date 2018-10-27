@@ -4,22 +4,23 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text.Encodings.Web;
 using System.Threading.Tasks;
+using AgriFood.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 
-namespace AgriFood.Areas.Identity.Pages.Account.Manage
+namespace AgriFood
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -39,6 +40,9 @@ namespace AgriFood.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+
+            public string FarmName { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -46,6 +50,13 @@ namespace AgriFood.Areas.Identity.Pages.Account.Manage
             [Phone]
             [Display(Name = "Phone number")]
             public string PhoneNumber { get; set; }
+
+            [Required]
+            public string Description { get; set; }
+
+            public double Longitude { get; set; }
+
+            public double Latitude { get; set; }
         }
 
         public async Task<IActionResult> OnGetAsync()
@@ -59,11 +70,15 @@ namespace AgriFood.Areas.Identity.Pages.Account.Manage
             var userName = await _userManager.GetUserNameAsync(user);
             var email = await _userManager.GetEmailAsync(user);
             var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-
+            ViewData["IsFarmerUser?"] = User.IsInRole("Farmer");
             Username = userName;
 
             Input = new InputModel
             {
+                Description = user.Description,
+                FarmName = user.FarmName,
+                Longitude = user.Longitude,
+                Latitude = user.Latitude,
                 Email = email,
                 PhoneNumber = phoneNumber
             };
@@ -84,6 +99,26 @@ namespace AgriFood.Areas.Identity.Pages.Account.Manage
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            if (Input.Description != user.Description)
+            {
+                user.Description = Input.Description;
+            }
+
+            if (Input.FarmName != user.FarmName)
+            {
+                user.FarmName = Input.FarmName;
+            }
+
+            if (Input.Longitude != user.Longitude)
+            {
+                user.Longitude = Input.Longitude;
+            }
+
+            if (Input.Latitude != user.Latitude)
+            {
+                user.Latitude = Input.Latitude;
             }
 
             var email = await _userManager.GetEmailAsync(user);
@@ -107,6 +142,8 @@ namespace AgriFood.Areas.Identity.Pages.Account.Manage
                     throw new InvalidOperationException($"Unexpected error occurred setting phone number for user with ID '{userId}'.");
                 }
             }
+
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";

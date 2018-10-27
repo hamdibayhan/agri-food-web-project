@@ -1,0 +1,19 @@
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    background-color: #343a40;
+    color: white;
+    line-height: 3rem;
+}
+
+.product-card {
+    box-shadow: 0 4px 12px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    width: 15rem;
+}
+
+.product-card > .card-img-top {
+    height: 238px;
+}

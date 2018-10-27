@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -7,15 +7,16 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using AgriFood.Models;
 
 namespace AgriFood.Areas.Identity.Pages.Account
 {
     [AllowAnonymous]
     public class ResetPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public ResetPasswordModel(UserManager<IdentityUser> userManager)
+        public ResetPasswordModel(UserManager<ApplicationUser> userManager)
         {
             _userManager = userManager;
         }
@@ -44,6 +45,7 @@ namespace AgriFood.Areas.Identity.Pages.Account
 
         public IActionResult OnGet(string code = null)
         {
+            return NotFound();
             if (code == null)
             {
                 return BadRequest("A code must be supplied for password reset.");
@@ -60,6 +62,7 @@ namespace AgriFood.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync()
         {
+            return NotFound();
             if (!ModelState.IsValid)
             {
                 return Page();

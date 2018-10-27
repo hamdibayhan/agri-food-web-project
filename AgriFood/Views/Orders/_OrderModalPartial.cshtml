@@ -1,0 +1,48 @@
+@model Order
+
+<div class="modal fade" id="add-order" tabindex="-1" role="dialog" aria-labelledby="addOrderLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="addOrderLabel">Add Order</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form asp-action="Create" asp-controller="Orders">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <input name="IsValid" type="hidden" value="@ViewData.ModelState.IsValid.ToString()" />
+                    <div class="form-group">
+                        <label asp-for="Address" class="control-label"></label>
+                        <input asp-for="Address" class="form-control" />
+                        <span asp-validation-for="Address" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Amount" class="control-label"></label>
+                        <input asp-for="Amount" class="form-control" />
+                        <span asp-validation-for="Amount" class="text-danger"></span>
+                    </div>
+                    <div>Unit Price: $<strong id="product-unit-price">@ViewBag.ProductPrice</strong></div>
+                    <br />
+                    <div>Total Price: $<strong id="order-total-price">0</strong></div>
+                    <br />
+                    <div class="form-group">
+                        <input asp-for="ProductId" class="form-control" hidden />
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" data-save="modal">Apply</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#Amount").keyup(function() {
+        let product_unit_price = parseInt($('#product-unit-price').html());
+        $('#order-total-price').html( product_unit_price * $(this).val());
+    });
+</script>
